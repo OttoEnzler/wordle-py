@@ -1,11 +1,19 @@
 let intentos = 6;
-let diccionario = ['APPLE', 'HURLS', 'WINGS', 'YOUTH']
-const palabra = diccionario[Math.floor(Math.random() * diccionario.length)];
 const button = document.getElementById("guess-button");
 const input = document.getElementById("guess-input");
 const valor = input.value;
+let palabra;
 
 window.addEventListener('load', init)
+const API = 'https://random-word-api.vercel.app/api?words=1&length=5&type=uppercase&alphabetize=true';
+fetch(API).then(response => response.json())
+    .then(response => {
+       palabra = response[0];
+       console.log("La palabra es: ", palabra);
+    })
+    .catch(err => console.log(err));
+
+
 
 function init() {
     console.log('Esto se ejecuta solo cuando se carga la pagina web')
@@ -52,9 +60,8 @@ function intentar() {
     }
     GRID.appendChild(ROW)
     intentos--
-    if (INTENTO === palabra) {
-        terminar("<h1>GANASTE!😀</h1>")
-        return
+    if (intentos == 0) {
+        terminar("<h1>PERDISTE!😖</h1>")
     }
 }
 
@@ -65,7 +72,6 @@ function terminar(mensaje) {
     let contenedor = document.getElementById('guesses');
     contenedor.innerHTML = mensaje;
 }
-
 
 
 button.addEventListener("click", intentar);
